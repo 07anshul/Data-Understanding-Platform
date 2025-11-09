@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  fastapi:
+    build: ./fastapi
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - ./fastapi:/usr/src/app
+      - ./uploads:/usr/src/app/uploads
+      - ./outputs:/usr/src/app/outputs
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  streamlit:
+    build: ./streamlit
+    env_file: .env
+    volumes:
+      - ./streamlit:/usr/src/streamlit
+    ports:
+      - "8501:8501"
+    command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+  migrate:
+    build: ./fastapi
+    env_file: .env
+    depends_on:
+      - db
+    working_dir: /usr/src/app
+    volumes:
+      - ./fastapi:/usr/src/app
+    entrypoint: ["alembic", "-c", "alembic.ini", "upgrade", "head"]
+
+volumes:
+  db-data:

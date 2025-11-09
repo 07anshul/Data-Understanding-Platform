@@ -1,0 +1,5 @@
+GRANT CONNECT ON DATABASE datalite_dev TO datalite_dev_user;
+GRANT USAGE ON SCHEMA public TO datalite_dev_user;
+GRANT CREATE ON SCHEMA public TO datalite_dev_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO datalite_dev_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO datalite_dev_user;
