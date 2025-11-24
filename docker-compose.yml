@@ -3,19 +3,22 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${DATABASE_PORT:-5434}:5432"
 
   fastapi:
     build: ./fastapi
     env_file: .env
     depends_on:
       - db
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
     volumes:
       - ./fastapi:/usr/src/app
       - ./uploads:/usr/src/app/uploads
@@ -39,6 +42,9 @@ services:
     depends_on:
       - db
     working_dir: /usr/src/app
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
     volumes:
       - ./fastapi:/usr/src/app
     entrypoint: ["alembic", "-c", "alembic.ini", "upgrade", "head"]

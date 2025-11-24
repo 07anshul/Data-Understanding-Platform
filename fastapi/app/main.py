@@ -4,7 +4,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from .config import settings
 
-app = FastAPI(title="DataLite")
+app = FastAPI(title="Platform")
 
 os.makedirs(settings.upload_folder, exist_ok=True)
 os.makedirs(settings.output_folder, exist_ok=True)

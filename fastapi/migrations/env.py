@@ -26,9 +26,16 @@ config = context.config
 if config.config_file_name:
     fileConfig(config.config_file_name)
 
+db_url = os.getenv("DATABASE_URL")
+if not db_url:
+    db_url = (
+        f"postgresql+asyncpg://{os.getenv('DATABASE_USER')}:{os.getenv('DATABASE_PASSWORD')}"
+        f"@{os.getenv('DATABASE_HOST', 'localhost')}:{os.getenv('DATABASE_PORT', '5432')}"
+        f"/{os.getenv('DATABASE_NAME')}"
+    )
+
 target_metadata = Base.metadata
 
-db_url = os.getenv("DATABASE_URL") or config.get_main_option("sqlalchemy.url")
 if not db_url:
     raise RuntimeError("Database URL not found.")
 

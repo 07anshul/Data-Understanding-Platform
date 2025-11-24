@@ -1,5 +1,11 @@
-GRANT CONNECT ON DATABASE datalite_dev TO datalite_dev_user;
-GRANT USAGE ON SCHEMA public TO datalite_dev_user;
-GRANT CREATE ON SCHEMA public TO datalite_dev_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO datalite_dev_user;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO datalite_dev_user;
+--platform_admin
+ALTER DATABASE platform_dev_db OWNER TO platform_admin;
+ALTER SCHEMA public OWNER TO platform_admin;
+
+--platform_dev
+GRANT CONNECT ON DATABASE platform_dev_db TO platform_dev;
+GRANT USAGE ON SCHEMA public TO platform_dev;
+GRANT CREATE ON SCHEMA public TO platform_dev;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO platform_dev;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO platform_dev;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO platform_dev;

@@ -1,1 +1,9 @@
+# autogenerate migration
 alembic -c alembic.ini revision --autogenerate -m ""
+
+# apply migration to DB via Docker
+docker compose run --rm migrate
+
+# verify migration
+# docker exec -it <db_container> psql -U <db_user> -d <db_name> -c '\dt'
+docker exec -it datalite-db-1 psql -U platform_dev -d platform_dev_db -c '\dt'
