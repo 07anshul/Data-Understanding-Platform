@@ -1,3 +1,3 @@
 import streamlit
 
-streamlit.title("DataLite")
+streamlit.title("Platform")

@@ -18,8 +18,9 @@ try:
 except Exception as e:
     raise ImportError(f"Could not import Base (target metadata): {e}")
 
+PROJECT_BASE = Path(__file__).resolve().parents[2]
 from dotenv import load_dotenv
-load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
+load_dotenv(PROJECT_BASE / ".env")
 
 config = context.config
 
