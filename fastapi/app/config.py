@@ -1,5 +1,10 @@
 from pydantic_settings import BaseSettings
-import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+UPLOAD_DIR = BASE_DIR / "uploads"
+OUTPUT_DIR = BASE_DIR / "outputs"
 
 class Settings(BaseSettings):
     database_user: str | None = None
@@ -12,8 +17,8 @@ class Settings(BaseSettings):
     secret_key: str
     fastapi_host: str = "0.0.0.0"
     fastapi_port: int = 8000
-    upload_folder: str = "uploads"
-    output_folder: str = "outputs"
+    upload_folder: str = str(UPLOAD_DIR)
+    output_folder: str = str(OUTPUT_DIR)
 
     @property
     def sql_url(self):

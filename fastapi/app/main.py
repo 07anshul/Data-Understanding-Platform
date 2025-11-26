@@ -1,13 +1,18 @@
 import os
 import uuid
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from .config import settings
 
-app = FastAPI(title="Platform")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    os.makedirs(settings.upload_folder, exist_ok=True)
+    os.makedirs(settings.output_folder, exist_ok=True)
 
-os.makedirs(settings.upload_folder, exist_ok=True)
-os.makedirs(settings.output_folder, exist_ok=True)
+    yield
+
+app = FastAPI(title="Platform", lifespan=lifespan)
 
 @app.get("/health")
 async def health():
