@@ -3,34 +3,31 @@ import uuid
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.responses import JSONResponse
-from .config import settings
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    os.makedirs(settings.upload_folder, exist_ok=True)
-    os.makedirs(settings.output_folder, exist_ok=True)
+from app.config import settings
+from app.api.files import router as files_router
 
-    yield
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     os.makedirs(settings.upload_folder, exist_ok=True)
+#     os.makedirs(settings.output_folder, exist_ok=True)
+#
+#     yield
+#
+# app = FastAPI(title="Platform", lifespan=lifespan)
+app = FastAPI(title="Platform")
 
-app = FastAPI(title="Platform", lifespan=lifespan)
+app.include_router(files_router)
 
 @app.get("/health")
 async def health():
     return {"status": "ok"}
 
-@app.get("/upload")
-async def upload(file: UploadFile = File(...)):
-    file_id = str(uuid.uuid4())
-    dest_path = os.path.join(settings.upload_folder, f"{file_id}_{file.filename}")
-    try:
-        with open(dest_path, "wb") as f:
-            while True:
-                chunk = await file.read(1024*1024)
-                if not chunk:
-                    break
-                f.write(chunk)
-    except Exception as e:
-        raise HTTPException(status_code=500, details=f"Failed saving file: {e}")
-        # db entry for file job
-
-    return JSONResponse({"file_id": file_id, "path": dest_path})
+@app.get("/verify/settings")
+def verify_settings():
+    return {
+        "database_user": settings.database_user,
+        "database_host": settings.database_host,
+        "database_port": settings.database_port,
+        "sql_url": settings.sql_url,
+    }

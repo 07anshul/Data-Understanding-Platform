@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -20,8 +20,13 @@ class Settings(BaseSettings):
     upload_folder: str = str(UPLOAD_DIR)
     output_folder: str = str(OUTPUT_DIR)
 
+    model_config = SettingsConfigDict(
+        env_file=str(BASE_DIR / ".env"),
+        env_file_encoding="utf-8",
+    )
+
     @property
-    def sql_url(self):
+    def sql_url(self) -> str:
         if self.database_url:
             return self.database_url
 
@@ -30,8 +35,8 @@ class Settings(BaseSettings):
             f"@{self.database_host}:{self.database_port}/{self.database_name}"
         )
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    # class Config:
+    #     env_file = ".env"
+    #     env_file_encoding = "utf-8"
 
 settings = Settings()
