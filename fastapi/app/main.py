@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 from app.config import settings
 from app.api.files import router as files_router
+from app.api.jobs import router as jobs_router
 
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
@@ -18,6 +19,7 @@ from app.api.files import router as files_router
 app = FastAPI(title="Platform")
 
 app.include_router(files_router)
+app.include_router(jobs_router)
 
 @app.get("/health")
 async def health():

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.status import HTTP_201_CREATED
 
 from app.db import get_db
-from app.models import File as FileModel
+from app.models import File as FileModel, Job as JobModel
 from app.uploads import upload_dir_exists, generate_stored_name
 
 router = APIRouter(prefix="/files", tags=["files"])
@@ -47,12 +47,27 @@ async def upload_file(
         status = "uploaded",
     )
     db.add(file_row)
+    await db.flush()
+
+    job_row = JobModel(
+        file_id = file_row.id,
+        user_id = None,
+        model_version = None,
+        status = 'queued',
+        progress = 0,
+    )
+    db.add(job_row)
+
     await db.commit()
     await db.refresh(file_row)
+    await db.refresh(job_row)
 
     return {
         "file_id": file_row.id,
         "original_name": file_row.original_name,
         "size_bytes": file_row.size_bytes,
-        "status": file_row.status
+        "file_status": file_row.status,
+        "job_id": job_row.id,
+        "job_status": job_row.status,
+        "job_progress": job_row.progress
     }
