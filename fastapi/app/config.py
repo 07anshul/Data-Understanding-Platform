@@ -7,6 +7,7 @@ UPLOAD_DIR = BASE_DIR / "uploads"
 OUTPUT_DIR = BASE_DIR / "outputs"
 
 class Settings(BaseSettings):
+    # database
     database_user: str | None = None
     database_password: str | None = None
     database_name: str | None = None
@@ -14,11 +15,20 @@ class Settings(BaseSettings):
     database_port: int = 5432
     database_url: str | None = None
 
+    # fastapi
     secret_key: str
     fastapi_host: str = "0.0.0.0"
     fastapi_port: int = 8000
+
+    # storage
     upload_folder: str = str(UPLOAD_DIR)
     output_folder: str = str(OUTPUT_DIR)
+
+    # download-feature
+    UNPAYWALL_EMAIL: str | None = None
+    CROSSREF_BASE_URL: str = "https://api.crossref.org/works"
+    UNPAYWALL_BASE_URL: str = "https://api.unpaywall.org/v2"
+    HTTP_TIMEOUT_SECONDS: int = 8
 
     model_config = SettingsConfigDict(
         env_file=str(BASE_DIR / ".env"),
