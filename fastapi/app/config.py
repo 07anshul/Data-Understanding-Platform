@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     upload_folder: str = str(UPLOAD_DIR)
     output_folder: str = str(OUTPUT_DIR)
 
+    # redis
+    REDIS_URL: str | None = None
+
     # download-feature
     UNPAYWALL_EMAIL: str | None = None
     CROSSREF_BASE_URL: str = "https://api.crossref.org/works"

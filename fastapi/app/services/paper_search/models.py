@@ -26,3 +26,8 @@ class UnpaywallOAInfo(BaseModel):
     best_oa_location: Optional[OALocation] = None
     oa_locations: List[OALocation] = []
 
+class ResolvedPDF(BaseModel):
+    doi: str
+    url: str
+    source: Literal["unpaywall_best", "unpaywall_alt"]
+

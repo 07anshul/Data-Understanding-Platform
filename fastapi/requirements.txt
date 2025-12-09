@@ -10,3 +10,5 @@ pytest
 httpx
 python-dotenv
 psycopg2-binary
+numpy
+redis>=5.0.0

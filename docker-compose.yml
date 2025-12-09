@@ -16,6 +16,7 @@ services:
     env_file: .env
     depends_on:
       - db
+      - redis
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
@@ -35,6 +36,12 @@ services:
     ports:
       - "8501:8501"
     command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
 
   migrate:
     profiles: ["migration"]
