@@ -16,7 +16,7 @@ router = APIRouter(prefix="/papers", tags=["papers"])
 @router.get("/search", response_model=List[SearchResult])
 def search_papers(
         query: str = Query(..., min_length=3, max_length=300),
-        limit: int = Query(10, ge=1, le=25),
+        limit: int = Query(10, ge=1, le=100),
 ):
     # search cache
     cached = get_cached_search(query)

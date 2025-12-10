@@ -21,7 +21,7 @@ def _normalise_query(q: str) -> str:
 
 def get_cached_search(query: str) -> Optional[List[SearchResult]]:
     r = get_redis_client()
-    key = f"fpapers:search:{_normalise_query()}"
+    key = f"papers:search:{_normalise_query(query)}"
     raw = r.get(key)
     if raw is None:
         return None
